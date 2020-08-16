@@ -18,7 +18,15 @@ export default class ClassesController {
         const time     = filters.time as string;
 
         if (!week_day && !subject && !time) {
-            const classes = await db('classes').select('*');
+            const classes = await db('classes')
+                .select('*')
+                .whereExists(function() {
+                    this.select('class_schedule.*')
+                        .from('class_schedule')
+                        .whereRaw('`class_schedule`.`class_id` = `classes`.`id`')
+                })
+                .join('users', 'classes.user_id', '=', 'users.id')
+                .select(['classes.*', 'users.*']);
             return response.send(classes);
         }
 
