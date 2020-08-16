@@ -17,6 +17,11 @@ export default class ClassesController {
         const subject  = filters.subject as string;
         const time     = filters.time as string;
 
+        if (!week_day && !subject && !time) {
+            const classes = await db('classes').select('*');
+            return response.send(classes);
+        }
+
         if (!week_day || !subject || !time) {
             return response.status(400).json({
                 error: 'Missing filters to search classes',
