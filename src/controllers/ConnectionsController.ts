@@ -6,8 +6,7 @@ export default class ConnectionsController {
     async index(request: Request, response: Response) {
         const totalConnections = await db('connections').count('* as total');
         const { total } = totalConnections[0];
-
-        return response.json({ total });
+        return response.send({ total });
     }
 
     // Cria nova conexão para um usuário
@@ -18,6 +17,6 @@ export default class ConnectionsController {
             user_id,
         });
 
-        return response.status(200);
+        return response.status(200).send();
     }
 }
